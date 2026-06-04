@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HeyDoc — Governed clinical reasoning for primary care</title>
+<meta name="description" content="HeyDoc is a governed, deterministic clinical decision-support layer for primary care that integrates with Epic via SMART on FHIR. Built by a practicing physician. Supports clinicians; never replaces clinical judgment." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --paper: #f6f2ea;
+    --paper-2: #efe9dd;
+    --ink: #17211d;
+    --ink-soft: #4c574f;
+    --accent: #145c4a;
+    --accent-2: #2c7a63;
+    --clay: #a8572f;
+    --line: rgba(23, 33, 29, 0.14);
+    --maxw: 1080px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: "IBM Plex Sans", sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* faint paper grain */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 28px; position: relative; z-index: 1; }
+
+  /* ---- type ---- */
+  .display {
+    font-family: "Fraunces", serif;
+    font-weight: 500;
+    line-height: 1.04;
+    letter-spacing: -0.01em;
+  }
+  .mono {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  /* ---- top bar ---- */
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 26px 0 22px; border-bottom: 1px solid var(--line);
+  }
+  .brand { font-family: "Fraunces", serif; font-weight: 600; font-size: 1.4rem; letter-spacing: -0.01em; }
+  .brand span { color: var(--accent); }
+  .toplinks { display: flex; gap: 26px; }
+  .toplinks a {
+    color: var(--ink-soft); text-decoration: none; font-size: 0.9rem;
+    transition: color 0.2s ease;
+  }
+  .toplinks a:hover { color: var(--accent); }
+
+  /* ---- hero ---- */
+  .hero { padding: 88px 0 64px; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 7px 14px; color: var(--ink-soft); background: rgba(255,255,255,0.4);
+  }
+  .pill .dot {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--accent-2);
+    box-shadow: 0 0 0 3px rgba(44,122,99,0.18);
+  }
+  .hero h1 { font-size: clamp(2.6rem, 6.5vw, 5rem); margin: 30px 0 0; max-width: 16ch; }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero .lede {
+    font-size: clamp(1.05rem, 2vw, 1.3rem); color: var(--ink-soft);
+    max-width: 56ch; margin-top: 26px;
+  }
+
+  .rule { height: 1px; background: var(--line); margin: 0; }
+
+  /* ---- section scaffold ---- */
+  section { padding: 64px 0; }
+  .eyebrow { color: var(--accent); margin-bottom: 18px; }
+  .section-grid { display: grid; grid-template-columns: 0.85fr 1.4fr; gap: 48px; }
+  .section-grid h2 { font-size: clamp(1.7rem, 3vw, 2.4rem); max-width: 14ch; }
+  .prose p { color: var(--ink-soft); font-size: 1.06rem; max-width: 60ch; }
+  .prose p + p { margin-top: 18px; }
+
+  /* ---- principles ---- */
+  .principles { display: grid; gap: 0; }
+  .principle {
+    display: grid; grid-template-columns: 56px 1fr; gap: 22px;
+    padding: 28px 0; border-top: 1px solid var(--line);
+    align-items: start;
+  }
+  .principle:last-child { border-bottom: 1px solid var(--line); }
+  .principle .num { font-family: "Fraunces", serif; font-size: 1.5rem; color: var(--accent); font-weight: 500; }
+  .principle h3 { font-size: 1.22rem; font-weight: 600; margin-bottom: 7px; }
+  .principle p { color: var(--ink-soft); max-width: 64ch; }
+  .principle code {
+    font-family: "IBM Plex Mono", monospace; font-size: 0.86em;
+    background: var(--paper-2); padding: 1px 6px; border-radius: 4px; color: var(--accent);
+  }
+
+  /* ---- governance panel ---- */
+  .panel {
+    background: var(--ink); color: #e9efe9; border-radius: 14px;
+    padding: clamp(34px, 5vw, 60px);
+  }
+  .panel .eyebrow { color: #7fb7a4; }
+  .panel h2 { font-size: clamp(1.7rem, 3vw, 2.3rem); max-width: 20ch; color: #fff; }
+  .gov-list { list-style: none; margin-top: 34px; display: grid; gap: 0; }
+  .gov-list li {
+    padding: 18px 0; border-top: 1px solid rgba(255,255,255,0.14);
+    display: grid; grid-template-columns: 220px 1fr; gap: 22px; align-items: baseline;
+  }
+  .gov-list li:last-child { border-bottom: 1px solid rgba(255,255,255,0.14); }
+  .gov-list .k { color: #8fc4b2; }
+  .gov-list .v { color: #d7ded7; }
+
+  /* ---- closing / contact ---- */
+  .closing h2 { font-size: clamp(1.9rem, 4vw, 3rem); max-width: 18ch; }
+  .closing p { color: var(--ink-soft); max-width: 56ch; margin-top: 20px; font-size: 1.06rem; }
+  .contact { margin-top: 30px; display: inline-flex; flex-direction: column; gap: 6px; }
+  .contact a { color: var(--accent); text-decoration: none; font-weight: 500; border-bottom: 1px solid var(--line); padding-bottom: 2px; width: fit-content; }
+  .contact a:hover { color: var(--clay); }
+
+  /* ---- footer ---- */
+  footer { border-top: 1px solid var(--line); padding: 40px 0 56px; }
+  footer .cols { display: flex; justify-content: space-between; gap: 30px; flex-wrap: wrap; }
+  footer p { color: var(--ink-soft); font-size: 0.86rem; max-width: 52ch; }
+  .disclaimer { margin-top: 18px; font-size: 0.78rem; color: var(--ink-soft); opacity: 0.85; }
+
+  /* ---- entrance motion ---- */
+  .rise { opacity: 0; transform: translateY(16px); animation: rise 0.9s cubic-bezier(0.2,0.7,0.2,1) forwards; }
+  .d1 { animation-delay: 0.05s; } .d2 { animation-delay: 0.18s; }
+  .d3 { animation-delay: 0.31s; } .d4 { animation-delay: 0.44s; }
+  @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+  @media (prefers-reduced-motion: reduce) { .rise { animation: none; opacity: 1; transform: none; } }
+
+  /* ---- responsive ---- */
+  @media (max-width: 760px) {
+    .toplinks { display: none; }
+    .section-grid { grid-template-columns: 1fr; gap: 22px; }
+    .gov-list li { grid-template-columns: 1fr; gap: 4px; }
+    .principle { grid-template-columns: 40px 1fr; gap: 16px; }
+    .hero { padding: 60px 0 48px; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">Hey<span>Doc</span></div>
+      <nav class="toplinks">
+        <a href="#what">What it is</a>
+        <a href="#how">How it works</a>
+        <a href="#governance">Governance</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <div class="hero">
+      <span class="pill rise d1 mono"><span class="dot"></span>In development · Epic on FHIR sandbox</span>
+      <h1 class="display rise d2">Governed clinical reasoning for <em>primary care</em>.</h1>
+      <p class="lede rise d3">HeyDoc is a deterministic clinical decision-support layer that works inside the primary-care workflow and connects to Epic through SMART on FHIR. It supports the clinician&rsquo;s judgment — it never replaces it.</p>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+
+  <section id="what">
+    <div class="wrap section-grid">
+      <div>
+        <div class="eyebrow mono">What it is</div>
+        <h2 class="display">A reasoning layer, not another chatbot.</h2>
+      </div>
+      <div class="prose">
+        <p>Most clinical AI is a language model asked to behave. HeyDoc inverts that: the clinical decision is made by a transparent, rule-based engine that reasons over the patient&rsquo;s actual chart, and a language model is used only to explain the result in plain clinical prose.</p>
+        <p>It is built by a practicing internal-medicine physician for the work that consumes a primary-care day — the In Basket, abnormal-result follow-up, medication management, screening, and the forms and narratives in between. The aim is narrow and deep: get a small set of high-volume decisions exactly right, with the reasoning shown every time.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="rule"></div>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="eyebrow mono">How it works</div>
+      <div class="principles">
+        <div class="principle">
+          <div class="num">01</div>
+          <div>
+            <h3>Deterministic engine, language-model surfaces</h3>
+            <p>Every recommendation is produced by an auditable rule set, not by free-form generation. The model renders the explanation; it does not make the call.</p>
+          </div>
+        </div>
+        <div class="principle">
+          <div class="num">02</div>
+          <div>
+            <h3>Chart-state aware</h3>
+            <p>HeyDoc reasons over real chart data pulled through FHIR — labs, medications, diagnoses, prior scores — rather than over a conversation transcript.</p>
+          </div>
+        </div>
+        <div class="principle">
+          <div class="num">03</div>
+          <div>
+            <h3>Safety gates come first</h3>
+            <p>Hard, non-bypassable checks run before any routine logic. A positive suicidality screen, for example, halts management and routes to a clinician — it is never answered generatively.</p>
+          </div>
+        </div>
+        <div class="principle">
+          <div class="num">04</div>
+          <div>
+            <h3>The clinician owns the decision</h3>
+            <p>Every output is a reviewable proposal with chart-cited reasoning you can <code>tap to see why</code>. Nothing is ordered or sent autonomously, and missing data fails safe to human review.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="governance">
+    <div class="wrap">
+      <div class="panel">
+        <div class="eyebrow mono">Governance &amp; security</div>
+        <h2 class="display">Designed for the standard of care, not around it.</h2>
+        <ul class="gov-list">
+          <li><span class="k mono">Access</span><span class="v">SMART on FHIR with least-privilege scopes; only the data a given decision requires is requested.</span></li>
+          <li><span class="k mono">Data handling</span><span class="v">Data minimization by default. HeyDoc is a reasoning layer, not a patient-data store; protected health information stays within the EHR&rsquo;s trust boundary.</span></li>
+          <li><span class="k mono">Human oversight</span><span class="v">Clinician-in-the-loop on every decision. No autonomous orders, messages, or treatment decisions.</span></li>
+          <li><span class="k mono">Auditability</span><span class="v">Each verdict carries the chart facts and rules that produced it, with a full reasoning trace for review.</span></li>
+          <li><span class="k mono">Scope</span><span class="v">Clinical decision support requiring clinician review. Not a medical device; not a diagnosis.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="closing">
+    <div class="wrap">
+      <div class="eyebrow mono">Status &amp; contact</div>
+      <h2 class="display">Currently building against the Epic developer sandbox.</h2>
+      <p>HeyDoc is in active development and testing with synthetic and sandbox patient data. For collaboration, clinical review, or integration questions, get in touch.</p>
+      <div class="contact">
+        <span class="mono">Inquiries</span>
+        <a href="mailto:hello@heydoc.example">hello@heydoc.example</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap cols">
+      <p>Built by a practicing primary-care physician. HeyDoc&rsquo;s purpose is to make a clinician faster and safer on a small set of high-volume decisions.</p>
+      <p class="mono">&copy; 2026 HeyDoc</p>
+    </div>
+    <div class="wrap">
+      <p class="disclaimer">HeyDoc provides clinical decision support and does not replace professional clinical judgment. It does not diagnose, and it is not a substitute for evaluation by a licensed clinician.</p>
+    </div>
+  </footer>
+</body>
+</html>
